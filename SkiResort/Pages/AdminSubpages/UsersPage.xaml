@@ -1,0 +1,27 @@
+﻿<Page x:Class="SkiResort.Pages.AdminSubpages.UsersPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SkiResort.Pages.AdminSubpages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="UsersPage">
+
+    <Grid>
+        <Rectangle Fill="#FFDAE3F9" Grid.RowSpan="10" Grid.ColumnSpan="10"/>
+        <DataGrid Grid.RowSpan="10" Grid.ColumnSpan="10" AlternatingRowBackground = "LightBlue"  
+         AlternationCount = "2" AutoGenerateColumns = "False" x:Name="UsersDataGrid" ItemsSource="{Binding}" CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header = "Id" Binding = "{Binding userID}" IsReadOnly="True"/>
+                <DataGridTextColumn Header = "Role" Binding = "{Binding type}" IsReadOnly="True"/>
+                <DataGridTextColumn Header = "First Name" Binding = "{Binding firstName}" IsReadOnly="True"/>
+                <DataGridTextColumn Header = "Last Name" Binding = "{Binding lastName}" IsReadOnly="True"/>
+                <DataGridTextColumn Header = "Adress" Binding = "{Binding address}" IsReadOnly="True"/>
+                <DataGridTextColumn Header = "Phone number" Binding = "{Binding phoneNumber}" IsReadOnly="True"/>
+                <DataGridTextColumn Header = "Email" Binding = "{Binding email}" IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+    </Grid>
+</Page>

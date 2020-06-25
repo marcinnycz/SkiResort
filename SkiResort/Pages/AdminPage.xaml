@@ -37,6 +37,15 @@
                 </StackPanel>
 
             </ListBoxItem>
+
+            <ListBoxItem x:Name="UsersListBoxItem" Selected="UsersListBoxItem_Selected">
+
+                <StackPanel Orientation="Horizontal" >
+                    <Image Source="..\Assets\Icon5.ico" Height="40" />
+                    <Label Content="Users" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="16" FontWeight="Bold"/>
+                </StackPanel>
+
+            </ListBoxItem>
         </ListBox>
         <Frame x:Name="AdminFrame" NavigationUIVisibility="Hidden" Grid.Column="1" Margin="0">
 

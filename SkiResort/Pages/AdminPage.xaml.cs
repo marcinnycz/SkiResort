@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MySql.Data.MySqlClient;
 
 namespace SkiResort.Pages
 {
@@ -21,24 +22,32 @@ namespace SkiResort.Pages
     /// </summary>
     public partial class AdminPage : Page
     {
-        public AdminPage()
+        MySqlConnection connection;
+
+        public AdminPage(MySqlConnection _connection)
         {
+            connection = _connection;
             InitializeComponent();
         }
 
         private void ManageListBoxItem_Selected(object sender, RoutedEventArgs e)
         {
-            AdminFrame.Content = new ManagePage();
+            AdminFrame.Content = new ManagePage(connection);
         }
 
         private void ReportListBoxItem_Selected(object sender, RoutedEventArgs e)
         {
-            AdminFrame.Content = new AdminReportPage();
+            AdminFrame.Content = new AdminReportPage(connection);
         }
 
         private void PriceListListBoxItem_Selected(object sender, RoutedEventArgs e)
         {
-            AdminFrame.Content = new PriceListPage();
+            AdminFrame.Content = new PriceListPage(connection);
+        }
+
+        private void UsersListBoxItem_Selected(object sender, RoutedEventArgs e)
+        {
+            AdminFrame.Content = new UsersPage(connection);
         }
     }
 }

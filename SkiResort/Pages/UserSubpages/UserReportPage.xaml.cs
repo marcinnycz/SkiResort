@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MySql.Data.MySqlClient;
 
 namespace SkiResort.Pages.UserSubpages
 {
@@ -20,8 +21,10 @@ namespace SkiResort.Pages.UserSubpages
     /// </summary>
     public partial class UserReportPage : Page
     {
-        public UserReportPage()
+        MySqlConnection connection;
+        public UserReportPage(MySqlConnection _connection)
         {
+            connection = _connection;
             InitializeComponent();
         }
     }

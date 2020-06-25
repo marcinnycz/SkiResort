@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -14,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
+using MySql.Data.MySqlClient;
 
 namespace SkiResort.Pages.AdminSubpages
 {
@@ -22,102 +24,177 @@ namespace SkiResort.Pages.AdminSubpages
     /// </summary>
     public partial class PriceListPage : Page
     {
-        public PriceListPage()
+        MySqlConnection connection;
+        DataTable dt;
+        DataTable dt_db;
+        public PriceListPage(MySqlConnection _connection)
         {
+            connection = _connection;
             InitializeComponent();
-            PriceListDataGrid.ItemsSource = PriceListEntry.GetEmployees();
+            UpdateGridFromDB();
         }
-    }
-    public class PriceListEntry
-    {
-        private string name;
-        private string price;
 
-        public string Name
+        private void UpdateGridFromDB()
         {
-            get { return name; }
-            set
+            MySqlDataAdapter sda = new MySqlDataAdapter("SELECT * from passtype INNER JOIN pricelist ON passtype.passTypeID=pricelist.PassType_passTypeID where endDate IS NULL", connection);
+            dt = new DataTable();
+            dt_db = new DataTable();
+            sda.Fill(dt);
+            sda.Fill(dt_db);
+            PriceListDataGrid.ItemsSource = dt.AsDataView();
+        }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            connection.Open();
+
+            bool found = false;
+            int foundID = -1;
+            //TODO MAKE SURE ONLY CHANGED ROWS GET UPDATED
+            for (int j = 0; j < dt_db.Rows.Count; j++)
             {
-                name = value;            
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    if (dt.Rows[i]["PassType_passTypeID"].ToString() == dt_db.Rows[j]["PassType_passTypeID"].ToString())
+                    {
+                        found = true;
+                        foundID = i;
+                        break;
+                    }
+                }
+                if (found)
+                {
+                    if(dt.Rows[foundID]["price"].ToString() != dt_db.Rows[j]["price"].ToString())
+                    {
+                        //Update existing row
+                        MySqlCommand cmd = new MySqlCommand();
+                        cmd.Connection = connection;
+                        cmd.CommandText = "UPDATE `pricelist` SET endDate = @now WHERE PassType_passTypeID = @id AND endDate IS NULL";
+                        cmd.Parameters.Add(new MySqlParameter("now", DateTime.Now));
+                        cmd.Parameters.Add(new MySqlParameter("id", dt.Rows[foundID]["PassType_passTypeID"].ToString()));
+                        cmd.ExecuteNonQuery();
+
+                        //Insert new row
+                        cmd.CommandText = "INSERT INTO `pricelist` (price, startDate, PassType_passTypeID) values (@price, @start, @pass)";
+                        cmd.Parameters.Add(new MySqlParameter("price", dt.Rows[foundID]["price"].ToString()));
+                        cmd.Parameters.Add(new MySqlParameter("start", DateTime.Now));
+                        cmd.Parameters.Add(new MySqlParameter("pass", dt.Rows[foundID]["PassType_passTypeID"].ToString()));
+                        cmd.ExecuteNonQuery();
+                    }
+                    found = false;
+                    foundID = -1;
+                }
+                else
+                {
+                    //DELETED
+
+                    MySqlCommand cmd = new MySqlCommand();
+                    cmd.Connection = connection;
+                    cmd.CommandText = "UPDATE `pricelist` SET endDate = @now WHERE PassType_passTypeID = @id AND endDate IS NULL";
+                    cmd.Parameters.Add(new MySqlParameter("now", DateTime.Now));
+                    cmd.Parameters.Add(new MySqlParameter("id", dt_db.Rows[j]["PassType_passTypeID"].ToString()));
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
+            //Check for new rows
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                if(dt.Rows[i]["priceListID"].ToString() == "")
+                {
+                    //Added new row
+                    //Add to passtype
+
+                    int passid;
+
+                    MySqlCommand cmd = new MySqlCommand();
+                    cmd.Connection = connection;
+                    cmd.CommandText = "SELECT passTypeID from passtype where name = @name";
+                    cmd.Parameters.Add(new MySqlParameter("name", dt.Rows[i]["name"]));
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    if(!rdr.Read())
+                    {
+                        rdr.Close();
+                        cmd = new MySqlCommand();
+                        cmd.Connection = connection;
+                        cmd.CommandText = "INSERT INTO passtype (name) values (@name)";
+                        cmd.Parameters.Add(new MySqlParameter("name", dt.Rows[i]["name"]));
+                        cmd.ExecuteNonQuery();
+
+                        //Get passtypeID
+                        cmd = new MySqlCommand();
+                        cmd.Connection = connection;
+                        cmd.CommandText = "SELECT passTypeID from passtype where name = @name";
+                        cmd.Parameters.Add(new MySqlParameter("name", dt.Rows[i]["name"]));
+                        rdr = cmd.ExecuteReader();
+                        rdr.Read();
+                        passid = (int)rdr[0];
+                        rdr.Close();
+                    }
+                    else
+                    {
+                        //Get passtypeID
+                        passid = (int)rdr[0];
+                        rdr.Close();
+                    }
+
+                    //Add to pricelist
+                    cmd = new MySqlCommand();
+                    cmd.Connection = connection;
+                    cmd.CommandText = "INSERT INTO pricelist (price, startDate, PassType_passTypeID) values (@price, @start, @pass)";
+                    cmd.Parameters.Add(new MySqlParameter("price", dt.Rows[i]["price"]));
+                    cmd.Parameters.Add(new MySqlParameter("start", DateTime.Now));
+                    cmd.Parameters.Add(new MySqlParameter("pass", passid));
+                    cmd.ExecuteNonQuery();
+                    
+                }
+            }
+            connection.Close();
+            MessageLabel.Content = "Successfully saved to database!";
+            UpdateGridFromDB();
+        }
+
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            DataRow workRow = dt.NewRow();
+            bool exists = false;
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                if(dt.Rows[i]["name"].ToString() == NameTextBox.Text)
+                {
+                    exists = true;
+                }
+            }
+            if(exists == false)
+            {
+                workRow["name"] = NameTextBox.Text;
+                workRow["price"] = PriceTextBox.Text;
+                dt.Rows.Add(workRow);
+            }
+            else
+            {
+                MessageLabel.Content = "Name already exists!";
+            }
+           
+        }
+
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            DataRow selectedItem = (DataRow)((DataRowView)PriceListDataGrid.SelectedItem).Row;
+            if (selectedItem != null)
+            {
+                dt.Rows.Remove(selectedItem);
             }
         }
 
-        public string Price
+        private void ClearMessage()
         {
-            get { return price; }
-            set
-            {
-                price = value;
-            }
+            MessageLabel.Content = "";
         }
 
-        public static ObservableCollection<PriceListEntry> GetEmployees()
+        private void Button_LostFocus(object sender, RoutedEventArgs e)
         {
-            var priceList = new ObservableCollection<PriceListEntry>();
-
-            priceList.Add(new PriceListEntry()
-            {
-                Name = "100 points",
-
-            });
-
-            priceList.Add(new PriceListEntry()
-            {
-                Name = "200 points",
-
-            });
-
-            priceList.Add(new PriceListEntry()
-            {
-                Name = "500 points",
-
-            });
-
-            priceList.Add(new PriceListEntry()
-            {
-                Name = "1000 points",
-
-            });
-
-            priceList.Add(new PriceListEntry()
-            {
-                Name = "1 hour",
-
-            });
-
-            priceList.Add(new PriceListEntry()
-            {
-                Name = "2 hours",
-
-            });
-
-            priceList.Add(new PriceListEntry()
-            {
-                Name = "4 hours",
-
-            });
-
-            priceList.Add(new PriceListEntry()
-            {
-                Name = "1 day",
-
-            });
-
-            priceList.Add(new PriceListEntry()
-            {
-                Name = "3 days",
-
-            });
-
-            priceList.Add(new PriceListEntry()
-            {
-                Name = "1 week",
-
-            });
-
-            return priceList;
+            ClearMessage();
         }
-
-    }
-        
+    }    
 }

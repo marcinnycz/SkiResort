@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MySql.Data.MySqlClient;
+
 
 namespace SkiResort.Pages.AdminSubpages
 {
@@ -21,12 +23,16 @@ namespace SkiResort.Pages.AdminSubpages
     /// </summary>
     public partial class ManagePage : Page
     {
-        public ManagePage()
+
+        MySqlConnection connection;
+        public ManagePage(MySqlConnection _connection)
         {
+            connection = _connection;
             InitializeComponent();
             LiftDataGrid.ItemsSource = Lift.GetEmployees();
         }
-    }
+
+    }   
 
     public class Lift
     {

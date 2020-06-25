@@ -10,21 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using MySql.Data.MySqlClient;
 
-namespace SkiResort.Pages.AdminSubpages
+namespace SkiResort.Windows
 {
     /// <summary>
-    /// Interaction logic for AdminReportPage.xaml
+    /// Interaction logic for PriceListInputWindow.xaml
     /// </summary>
-    public partial class AdminReportPage : Page
+    public partial class PriceListInputWindow : Window
     {
-        MySqlConnection connection;
-        public AdminReportPage(MySqlConnection _connection)
+        public PriceListInputWindow()
         {
-            connection = _connection;
             InitializeComponent();
         }
     }

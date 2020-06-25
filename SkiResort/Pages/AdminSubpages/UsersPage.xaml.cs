@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Data;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -17,15 +18,24 @@ using MySql.Data.MySqlClient;
 namespace SkiResort.Pages.AdminSubpages
 {
     /// <summary>
-    /// Interaction logic for AdminReportPage.xaml
+    /// Interaction logic for UsersPage.xaml
     /// </summary>
-    public partial class AdminReportPage : Page
+    public partial class UsersPage : Page
     {
         MySqlConnection connection;
-        public AdminReportPage(MySqlConnection _connection)
+        public UsersPage(MySqlConnection _connection)
         {
             connection = _connection;
             InitializeComponent();
+            UpdateGridFromDB();
+        }
+              
+        private void UpdateGridFromDB()
+        {
+            MySqlDataAdapter sda = new MySqlDataAdapter("SELECT * from user", connection);
+            DataTable dt = new DataTable();
+            sda.Fill(dt);
+            UsersDataGrid.ItemsSource = dt.AsDataView();
         }
     }
 }

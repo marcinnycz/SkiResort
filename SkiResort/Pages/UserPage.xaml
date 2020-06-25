@@ -37,6 +37,14 @@
                 </StackPanel>
 
             </ListBoxItem>
+            <ListBoxItem x:Name="RegisterListBoxItem" Selected="RegisterListBoxItem_Selected">
+
+                <StackPanel Orientation="Horizontal" >
+                    <Image Source="..\Assets\Icon3.ico" Height="40" />
+                    <Label Content="Register" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="16" FontWeight="Bold"/>
+                </StackPanel>
+
+            </ListBoxItem>
         </ListBox>
         <Frame x:Name="UserFrame" NavigationUIVisibility="Hidden" Grid.Column="1" Margin="0">
             

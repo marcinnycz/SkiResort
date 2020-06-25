@@ -1,0 +1,17 @@
+﻿<Window x:Class="SkiResort.Windows.PriceListInputWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SkiResort.Windows"
+        mc:Ignorable="d"
+        Title="PriceListInputWindow" Height="190"
+        Width="300"
+        MinHeight="10"
+        MinWidth="300"
+        ResizeMode="CanResizeWithGrip"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner" 
+        FocusManager.FocusedElement="{Binding ElementName=leftMarginTextBox}">
+    <Grid/>
+</Window>
