@@ -15,20 +15,30 @@
             <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100"/>
             <ColumnDefinition Width="150"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
-        <Rectangle Fill="#FFDAE3F9" Grid.ColumnSpan="3" Grid.RowSpan="10"/>
+        <Rectangle Fill="#FFDAE3F9" Grid.ColumnSpan="4" Grid.RowSpan="10"/>
         <Label Content="UserID" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="1"/>
-        <TextBox TextWrapping="Wrap" Grid.Column="1" Grid.Row="1" Margin="2"  VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
-        <Button x:Name="UseButton" Content="Use" HorizontalAlignment="Right" Grid.Column="1" Grid.Row="4" Margin="2" Width="50"/>
-        <Label Content="Pass Type&#xD;&#xA;" HorizontalAlignment="Right" Margin="0" VerticalAlignment="Center" Grid.Row="2" Height="26"/>
-        <TextBox Margin="2" TextWrapping="Wrap" Text="No pass" IsEnabled="False" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.Row="2" Grid.Column="1"/>
-        <ComboBox Margin="2" Grid.Row="3" Grid.Column="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
-        <Label Content="Lift" HorizontalAlignment="Right" Margin="0" VerticalAlignment="Center" Grid.Row="3"/>
+        <TextBox x:Name="UserIDTextBox" TextWrapping="Wrap" Grid.Column="1" Grid.Row="1" Margin="2"  VerticalContentAlignment="Center" HorizontalContentAlignment="Center" KeyDown="UserIDTextBox_KeyDown" LostFocus="UserIDTextBox_LostFocus"/>
+        <Button x:Name="UseButton" Content="Use" HorizontalAlignment="Right" Grid.Column="1" Grid.Row="6" Margin="2" Width="50" Click="UseButton_Click" IsEnabled="False" LostFocus="UseButton_LostFocus"/>
+        <Label Content="Pass Type" HorizontalAlignment="Right" Margin="0" VerticalAlignment="Center" Grid.Row="2" Height="26"/>
+        <ComboBox x:Name="LiftComboBox" Margin="2" Grid.Row="5" Grid.Column="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" IsEnabled="False"/>
+        <Label Content="Lift" HorizontalAlignment="Right" Margin="0" VerticalAlignment="Center" Grid.Row="5"/>
+
+        <ComboBox x:Name="SkiPassComboBox" Margin="2" Grid.Row="2" Grid.Column="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" DisplayMemberPath="name" IsEnabled="False" SelectionChanged="SkiPassComboBox_SelectionChanged"/>
+        <TextBox x:Name="NoPassTextBox" Text="No pass" Margin="2" Grid.Row="2" Grid.Column="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" IsEnabled="False"/>
+        <Label Content="Begins" HorizontalAlignment="Right" Margin="0" VerticalAlignment="Center" Grid.Row="3" Height="26"/>
+        <Label Content="Ends" HorizontalAlignment="Right" Margin="0" VerticalAlignment="Center" Grid.Row="4" Height="26"/>
+        <Label x:Name="BeginsLabel" Content="N/A" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Grid.Row="3" Grid.Column="1" Height="26"/>
+        <Label x:Name="EndsLabel" Content="N/A" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Grid.Row="4" Grid.Column="1" Height="26"/>
+        <Label x:Name="MessageLabel" Content="" Grid.Column="2" HorizontalAlignment="Left" Margin="5,2,0,2" Grid.Row="6"/>
     </Grid>
 </Page>

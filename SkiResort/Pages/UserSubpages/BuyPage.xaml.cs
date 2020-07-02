@@ -28,22 +28,76 @@ namespace SkiResort.Pages.UserSubpages
         {
             connection = _connection;       
             InitializeComponent();
-            MySqlDataAdapter sda = new MySqlDataAdapter("SELECT * from passtype INNER JOIN pricelist ON passtype.passTypeID=pricelist.PassType_passTypeID where endDate IS NULL", connection);
+            MySqlDataAdapter sda = new MySqlDataAdapter("SELECT * from passtype INNER JOIN pricelist ON passtype.passTypeID=pricelist.PassType_passTypeID where endDate IS NULL ORDER BY price", connection);
             dt = new DataTable();
             sda.Fill(dt);
             PassTypeComboBox.ItemsSource = dt.AsDataView();
+            
         }
 
         private void BuyButton_Click(object sender, RoutedEventArgs e)
         {
+            connection.Open();
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = "INSERT INTO `skipass` (startDate, expiryDate, User_userID, PassType_passTypeID, PassType_PriceList_priceListID) values (NULL, NULL, @user, @type, @price)";           
+            cmd.Parameters.Add(new MySqlParameter("user", UserIDTextBox.Text));
+            cmd.Parameters.Add(new MySqlParameter("type", dt.Rows[(int)PassTypeComboBox.SelectedIndex]["passTypeID"].ToString()));
+            cmd.Parameters.Add(new MySqlParameter("price", dt.Rows[(int)PassTypeComboBox.SelectedIndex]["priceListID"].ToString()));
+            cmd.ExecuteNonQuery();
 
+
+            cmd = new MySqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = "SELECT skiPassID from skipass where User_userID = @user AND PassType_passTypeID = @type AND PassType_PriceList_priceListID = @price AND startDate IS NULL";
+            cmd.Parameters.Add(new MySqlParameter("user", UserIDTextBox.Text));
+            cmd.Parameters.Add(new MySqlParameter("type", dt.Rows[(int)PassTypeComboBox.SelectedIndex]["passTypeID"].ToString()));
+            cmd.Parameters.Add(new MySqlParameter("price", dt.Rows[(int)PassTypeComboBox.SelectedIndex]["priceListID"].ToString()));
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            rdr.Read();
+            int skipassid = (int)rdr[0];
+            rdr.Close();
+
+
+            cmd = new MySqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = "INSERT INTO `payment` (date, paymentMethod, SkiPass_skiPassID) values (@date, @method, @pass)";
+            cmd.Parameters.Add(new MySqlParameter("date", DateTime.Now));
+            cmd.Parameters.Add(new MySqlParameter("method", PaymentMethodComboBox.Text));
+            cmd.Parameters.Add(new MySqlParameter("pass", skipassid));
+            cmd.ExecuteNonQuery();
+            
+
+            cmd = new MySqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = "SELECT firstName, lastName from `user` where userID = @user ";
+            cmd.Parameters.Add(new MySqlParameter("user", UserIDTextBox.Text));
+       
+            rdr = cmd.ExecuteReader();
+            rdr.Read();
+            string first = (string)rdr[0];
+            string last = (string)rdr[1];
+            rdr.Close();
+
+            connection.Close();
+
+            MessageLabel.Content = "Successfully bought a " + PassTypeComboBox.Text + " pass for " + first + " " + last;
         }
 
         private void PassTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            PriceLabel.Content = dt.Rows[(int)PassTypeComboBox.SelectedValue]["price"];
+            PriceLabel.Content = dt.Rows[(int)PassTypeComboBox.SelectedIndex]["price"];
             PaymentMethodComboBox.IsEnabled = true;
+        }
+
+        private void PaymentMethodComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
             BuyButton.IsEnabled = true;
+        }
+
+        private void BuyButton_LostFocus(object sender, RoutedEventArgs e)
+        {
+            MessageLabel.Content = "";
         }
     }
 }

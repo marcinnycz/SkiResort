@@ -48,12 +48,12 @@ namespace SkiResort
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            this.Owner.Show();
+            //this.Owner.Show();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            this.Owner.Hide();
+            //this.Owner.Hide();
         }
 
         private void Admin_Click(object sender, RoutedEventArgs e)

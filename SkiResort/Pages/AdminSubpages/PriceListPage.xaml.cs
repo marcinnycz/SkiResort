@@ -50,7 +50,7 @@ namespace SkiResort.Pages.AdminSubpages
 
             bool found = false;
             int foundID = -1;
-            //TODO MAKE SURE ONLY CHANGED ROWS GET UPDATED
+            
             for (int j = 0; j < dt_db.Rows.Count; j++)
             {
                 for (int i = 0; i < dt.Rows.Count; i++)
@@ -117,8 +117,9 @@ namespace SkiResort.Pages.AdminSubpages
                         rdr.Close();
                         cmd = new MySqlCommand();
                         cmd.Connection = connection;
-                        cmd.CommandText = "INSERT INTO passtype (name) values (@name)";
+                        cmd.CommandText = "INSERT INTO passtype (name, minutes) values (@name, @minutes)";
                         cmd.Parameters.Add(new MySqlParameter("name", dt.Rows[i]["name"]));
+                        cmd.Parameters.Add(new MySqlParameter("minutes", dt.Rows[i]["minutes"]));
                         cmd.ExecuteNonQuery();
 
                         //Get passtypeID
@@ -169,6 +170,7 @@ namespace SkiResort.Pages.AdminSubpages
             {
                 workRow["name"] = NameTextBox.Text;
                 workRow["price"] = PriceTextBox.Text;
+                workRow["minutes"] = MinutesTextBox.Text;
                 dt.Rows.Add(workRow);
             }
             else

@@ -41,7 +41,7 @@
             <ListBoxItem x:Name="UsersListBoxItem" Selected="UsersListBoxItem_Selected">
 
                 <StackPanel Orientation="Horizontal" >
-                    <Image Source="..\Assets\Icon5.ico" Height="40" />
+                    <Image Source="..\Assets\Icon6.ico" Height="40" />
                     <Label Content="Users" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="16" FontWeight="Bold"/>
                 </StackPanel>
 

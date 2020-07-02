@@ -40,7 +40,7 @@
             <ListBoxItem x:Name="RegisterListBoxItem" Selected="RegisterListBoxItem_Selected">
 
                 <StackPanel Orientation="Horizontal" >
-                    <Image Source="..\Assets\Icon3.ico" Height="40" />
+                    <Image Source="..\Assets\Icon7.ico" Height="40" />
                     <Label Content="Register" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="16" FontWeight="Bold"/>
                 </StackPanel>
 
