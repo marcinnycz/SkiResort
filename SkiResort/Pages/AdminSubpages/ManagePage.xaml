@@ -18,18 +18,18 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="100"/>
-            <ColumnDefinition Width="150"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Rectangle Fill="#FFDAE3F9" Grid.RowSpan="10" Grid.ColumnSpan="10"/>
-        <DataGrid Grid.RowSpan="10" Grid.ColumnSpan="10" AlternatingRowBackground = "LightBlue"  
-         AlternationCount = "2" AutoGenerateColumns = "False" x:Name="LiftDataGrid">
+        <DataGrid Grid.RowSpan="10" Grid.Column="0" AlternatingRowBackground = "LightBlue"  
+         AlternationCount = "2" AutoGenerateColumns = "False" x:Name="PriceListDataGrid" ItemsSource="{Binding}" CanUserAddRows="False" CanUserDeleteRows="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header = "Lift" Binding = "{Binding Name}" />
-                <DataGridCheckBoxColumn Header = "Operating" Binding = "{Binding Operating}" />
+                <DataGridTextColumn Header = "Name" Binding = "{Binding liftName}" IsReadOnly="True"/>
+                <DataGridCheckBoxColumn Header = "Availability" Binding = "{Binding availability}"/>
             </DataGrid.Columns>
         </DataGrid>
-        
+        <Button x:Name="SaveButton" Content="Save" HorizontalAlignment="Right" Margin="0,0,10,10" Grid.Row="5" VerticalAlignment="Bottom" Width="75" Click="SaveButton_Click" LostFocus="SaveButton_LostFocus"/>
+        <Label x:Name="MessageLabel" Content="" HorizontalAlignment="Right" Margin="0,0,100,10" Grid.Row="5" VerticalAlignment="Bottom"/>
+
     </Grid>
 </Page>
