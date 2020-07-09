@@ -168,10 +168,18 @@ namespace SkiResort.Pages.AdminSubpages
             }
             if(exists == false)
             {
-                workRow["name"] = NameTextBox.Text;
-                workRow["price"] = PriceTextBox.Text;
-                workRow["minutes"] = MinutesTextBox.Text;
-                dt.Rows.Add(workRow);
+                if(int.TryParse(PriceTextBox.Text, out int value) && int.TryParse(MinutesTextBox.Text, out int value2) && NameTextBox.Text != "")
+                {
+                    workRow["name"] = NameTextBox.Text;
+                    workRow["price"] = PriceTextBox.Text;
+                    workRow["minutes"] = MinutesTextBox.Text;
+                    dt.Rows.Add(workRow);
+                }
+                else
+                {
+                    MessageLabel.Content = "Please provide viable data.";
+                }
+
             }
             else
             {

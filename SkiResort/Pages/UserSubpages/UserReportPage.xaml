@@ -9,9 +9,49 @@
       Title="UserReportPage">
 
     <Grid>
-        <Rectangle Fill="#FFDAE3F9"/>
-        <Button Content="Generate report" HorizontalAlignment="Left" Margin="215,169,0,0" VerticalAlignment="Top" Width="115" Height="27"/>
-        <Rectangle Fill="#FFACB5CB" HorizontalAlignment="Left" Height="143" Margin="51,21,0,0" VerticalAlignment="Top" Width="279"/>
-        <Label Content="REPORT OPTIONS" HorizontalAlignment="Left" Height="143" Margin="51,21,0,0" VerticalAlignment="Top" Width="279" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="30" FontWeight="Bold"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Rectangle Fill="#FFDAE3F9" Grid.ColumnSpan="10" Grid.RowSpan="10"/>
+
+        <Label Content="UserID" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="1"/>
+        <TextBox x:Name="UserIDTextBox" TextWrapping="Wrap" Grid.Column="1" Grid.Row="1" Margin="2"  VerticalContentAlignment="Center" HorizontalContentAlignment="Center" KeyDown="UserIDTextBox_KeyDown" LostFocus="UserIDTextBox_LostFocus"/>
+        <Label Content="Pass" HorizontalAlignment="Right" Margin="0" VerticalAlignment="Center" Grid.Row="2" Height="26"/>
+        <ComboBox x:Name="SkiPassComboBox" Margin="2" Grid.Row="2" Grid.Column="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" IsEnabled="False" SelectionChanged="SkiPassComboBox_SelectionChanged" ItemsSource="{Binding}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding name, StringFormat='{}Name: {0}'}"/>
+                        <TextBlock Text="{Binding startDate, StringFormat='{}Started: {0}'}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <TextBox x:Name="NoPassTextBox" Text="No pass" Margin="2" Grid.Row="2" Grid.Column="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" IsEnabled="False"/>
+        <Label Content="Begins" HorizontalAlignment="Right" Margin="0" VerticalAlignment="Center" Grid.Row="3" Height="26"/>
+        <Label Content="Ends" HorizontalAlignment="Right" Margin="0" VerticalAlignment="Center" Grid.Row="4" Height="26"/>
+        <Label x:Name="BeginsLabel" Content="" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Grid.Row="3" Grid.Column="1" Height="26"/>
+        <Label x:Name="EndsLabel" Content="" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Grid.Row="4" Grid.Column="1" Height="26"/>
+
+        <DataGrid Grid.ColumnSpan="10" Grid.Row="10" AlternatingRowBackground = "LightBlue"  
+         AlternationCount = "2" AutoGenerateColumns = "False" x:Name="ResultDataGrid" ItemsSource="{Binding}" CanUserAddRows="False" CanUserDeleteRows="False" Margin="50,20,50,50">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header = "Lift name" Binding = "{Binding liftName}" IsReadOnly="True"/>
+                <DataGridTextColumn Header = "Times used" Binding = "{Binding timesUsed}" IsReadOnly="True"/>
+                <DataGridTextColumn Header = "First time used" Binding = "{Binding firstTimeUsed}" IsReadOnly="True"/>
+                <DataGridTextColumn Header = "Last time used" Binding = "{Binding lastTimeUsed}" IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Page>

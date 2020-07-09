@@ -30,27 +30,36 @@ namespace SkiResort.Pages.UserSubpages
 
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
-            connection.Open();
-            MySqlCommand cmd = new MySqlCommand("INSERT INTO `user` (type, firstName, lastName, address, phoneNumber, email) VALUES (@type, @first, @last, @adress, @phone, @email) ", connection);
-            ComboBoxItem typeItem = (ComboBoxItem)RoleComboBox.SelectedItem;
-            cmd.Parameters.Add(new MySqlParameter("type", typeItem.Content.ToString()));
-            cmd.Parameters.Add(new MySqlParameter("first", FirstNameTextBox.Text));
-            cmd.Parameters.Add(new MySqlParameter("last", LastNameTextBox.Text));
-            cmd.Parameters.Add(new MySqlParameter("adress", AdressTextBox.Text));
-            cmd.Parameters.Add(new MySqlParameter("phone", PhoneNumberTextBox.Text));
-            cmd.Parameters.Add(new MySqlParameter("email", EmailTextBox.Text));
+            
+            if(int.TryParse(PhoneNumberTextBox.Text, out int value) && FirstNameTextBox.Text != "" && LastNameTextBox.Text != "" && EmailTextBox.Text != "")
+            {
+                connection.Open();
+                MySqlCommand cmd = new MySqlCommand("INSERT INTO `user` (type, firstName, lastName, address, phoneNumber, email) VALUES (@type, @first, @last, @adress, @phone, @email) ", connection);
+                ComboBoxItem typeItem = (ComboBoxItem)RoleComboBox.SelectedItem;
+                cmd.Parameters.Add(new MySqlParameter("type", typeItem.Content.ToString()));
+                cmd.Parameters.Add(new MySqlParameter("first", FirstNameTextBox.Text));
+                cmd.Parameters.Add(new MySqlParameter("last", LastNameTextBox.Text));
+                cmd.Parameters.Add(new MySqlParameter("adress", AdressTextBox.Text));
+                cmd.Parameters.Add(new MySqlParameter("phone", PhoneNumberTextBox.Text));
+                cmd.Parameters.Add(new MySqlParameter("email", EmailTextBox.Text));
 
-            cmd.ExecuteNonQuery();
+                cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "SELECT LAST_INSERT_ID();";
+                cmd.CommandText = "SELECT LAST_INSERT_ID();";
 
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            rdr.Read();
-            ulong userid = (ulong)rdr[0];
-            rdr.Close();
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                rdr.Read();
+                ulong userid = (ulong)rdr[0];
+                rdr.Close();
 
-            connection.Close();
-            MessageLabel.Content = "User " + FirstNameTextBox.Text + " created sucessfully! Your ID is " + userid + ".";
+                connection.Close();
+                MessageLabel.Content = "User " + FirstNameTextBox.Text + " created sucessfully! Your ID is " + userid + ".";
+            }
+            else
+            {
+                MessageLabel.Content = "Please provide viable data.";
+            }
+            
         }
 
         private void RegisterButton_LostFocus(object sender, RoutedEventArgs e)
