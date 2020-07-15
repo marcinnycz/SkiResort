@@ -22,6 +22,7 @@ namespace SkiResort
     /// </summary>
     public partial class MainWindow : Window
     {
+        //Connection string. Enter the database credentials here.
         string cs = @"server=localhost;userid=root;password=marcinnycz;database=skiliftdb";
         MySqlConnection con;
         
