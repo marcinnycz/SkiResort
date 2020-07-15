@@ -23,13 +23,16 @@ namespace SkiResort.Pages.AdminSubpages
     public partial class UsersPage : Page
     {
         MySqlConnection connection;
+
+        //Main constructor
         public UsersPage(MySqlConnection _connection)
         {
             connection = _connection;
             InitializeComponent();
             UpdateGridFromDB();
         }
-              
+
+        //Function to refresh the data grid from the database
         private void UpdateGridFromDB()
         {
             MySqlDataAdapter sda = new MySqlDataAdapter("SELECT * from user", connection);

@@ -30,9 +30,10 @@ namespace SkiResort.Pages.UserSubpages
 
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
-            
+            //Check if every field has proper data    
             if(int.TryParse(PhoneNumberTextBox.Text, out int value) && FirstNameTextBox.Text != "" && LastNameTextBox.Text != "" && EmailTextBox.Text != "")
             {
+                //Insert a new user
                 connection.Open();
                 MySqlCommand cmd = new MySqlCommand("INSERT INTO `user` (type, firstName, lastName, address, phoneNumber, email) VALUES (@type, @first, @last, @adress, @phone, @email) ", connection);
                 ComboBoxItem typeItem = (ComboBoxItem)RoleComboBox.SelectedItem;
@@ -45,6 +46,7 @@ namespace SkiResort.Pages.UserSubpages
 
                 cmd.ExecuteNonQuery();
 
+                //Get the newly created ID
                 cmd.CommandText = "SELECT LAST_INSERT_ID();";
 
                 MySqlDataReader rdr = cmd.ExecuteReader();
@@ -53,6 +55,7 @@ namespace SkiResort.Pages.UserSubpages
                 rdr.Close();
 
                 connection.Close();
+                //Show a message with the given ID
                 MessageLabel.Content = "User " + FirstNameTextBox.Text + " created sucessfully! Your ID is " + userid + ".";
             }
             else

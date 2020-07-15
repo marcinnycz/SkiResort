@@ -22,14 +22,19 @@ namespace SkiResort.Pages.UserSubpages
     /// </summary>
     public partial class UsePage : Page
     {
+        //Data table for skipass
         DataTable dt;
+        //Data table for skilift
         DataTable dt_lift;
         MySqlConnection connection;
+
+        //Main constructor
         public UsePage(MySqlConnection _connection)
         {
             connection = _connection;
             InitializeComponent();
 
+            //Fill the lift combobox
             MySqlDataAdapter sda = new MySqlDataAdapter();
             MySqlCommand cmd = new MySqlCommand("SELECT * from skilift", connection);
             dt_lift = new DataTable();
@@ -38,6 +43,7 @@ namespace SkiResort.Pages.UserSubpages
             LiftComboBox.ItemsSource = dt_lift.AsDataView();
         }
 
+        //User pressed enter
         private void UserIDTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -52,6 +58,7 @@ namespace SkiResort.Pages.UserSubpages
             updateCombo();
         }
 
+        //Function to facilitate using a ski pass
         private void UseButton_Click(object sender, RoutedEventArgs e)
         {
             if (SkiPassComboBox.SelectedIndex < 0)
@@ -59,9 +66,12 @@ namespace SkiResort.Pages.UserSubpages
                 return;
             }
             connection.Open();
+            
+            //If the start date is not set
             if (dt.Rows[SkiPassComboBox.SelectedIndex]["startDate"].ToString() == "")
             {
                 //First time using the pass
+                //Set the start and expiry date
                 MySqlCommand cmd = new MySqlCommand("SELECT minutes FROM passtype INNER JOIN skipass where skipass.PassType_passTypeID = passtype.passTypeID AND skipass.skiPassID = @id", connection);
                 cmd.Parameters.Add(new MySqlParameter("id", dt.Rows[SkiPassComboBox.SelectedIndex]["skiPassID"].ToString()));
                 MySqlDataReader rdr = cmd.ExecuteReader();
@@ -102,7 +112,7 @@ namespace SkiResort.Pages.UserSubpages
             }
             else
             {
-                //Didnt use the lift before
+                //Didn't use the lift before
                 rdr1.Close();
                 cmd1.CommandText = "SELECT skiLiftID FROM skilift WHERE liftName = @name";
                 rdr1 = cmd1.ExecuteReader();
@@ -138,6 +148,7 @@ namespace SkiResort.Pages.UserSubpages
             connection.Close();
         }
 
+        //Update the skipass combobox based on the given user ID
         private void updateCombo()
         {
             UseButton.IsEnabled = false;
@@ -166,6 +177,7 @@ namespace SkiResort.Pages.UserSubpages
             }
         }
 
+        //Function that checks if the selected skipass has already expired
         private void SkiPassComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             UseButton.IsEnabled = false;
@@ -231,6 +243,8 @@ namespace SkiResort.Pages.UserSubpages
             MessageLabel.Content = "Beep!";
         }
 
+
+        //Function that enables the use button if a lift is selected
         private void LiftComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if(LiftComboBox.SelectedIndex < 0)

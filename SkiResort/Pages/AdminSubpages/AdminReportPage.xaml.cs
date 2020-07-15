@@ -22,35 +22,38 @@ namespace SkiResort.Pages.AdminSubpages
     /// </summary>
     public partial class AdminReportPage : Page
     {
+        //Data table for the ComboBox
         DataTable dt;
+        //Data table for the datagrid
         DataTable result_dt;
         MySqlConnection connection;
 
+        //Main constructor
         public AdminReportPage(MySqlConnection _connection)
         {
             connection = _connection;
             InitializeComponent();
 
+            //Create select query
             MySqlDataAdapter sda = new MySqlDataAdapter();
-
             MySqlCommand cmd = new MySqlCommand("SELECT * from skilift", connection);
 
-
+            //Fill data table for LiftComboBox
             sda.SelectCommand = cmd;
-
             dt = new DataTable();
             sda.Fill(dt);
             DataRow row = dt.NewRow();
             row["liftName"] = "Any";
             dt.Rows.Add(row);
 
+            //Assign the data table to the combobox
             LiftComboBox.ItemsSource = dt.AsDataView();
             LiftComboBox.SelectedIndex = dt.Rows.Count - 1;
         }
 
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
-            
+            //Create select command
             MySqlDataAdapter sda = new MySqlDataAdapter();
 
             string command = "SELECT * from skilift INNER JOIN lifthistory ON skilift.skiLiftID = lifthistory.SkiLift_skiLiftID";
@@ -62,6 +65,7 @@ namespace SkiResort.Pages.AdminSubpages
             bool added = false;
             string append = "";
             
+            //Add additional WHERE clauses based on UI inputs
             if(LiftComboBox.SelectedIndex >= 0 && LiftComboBox.Text != "Any")
             {
                 append += "liftName = @name AND ";
@@ -119,13 +123,13 @@ namespace SkiResort.Pages.AdminSubpages
                 command = command.Substring(0, command.Length - 5);
             }
 
-
-
+            //Fill the data table
             cmd.CommandText = command;
             sda.SelectCommand = cmd;
             result_dt = new DataTable();
             sda.Fill(result_dt);
 
+            //Fill the data grid
             LiftDataGrid.ItemsSource = result_dt.AsDataView();
         }
     }

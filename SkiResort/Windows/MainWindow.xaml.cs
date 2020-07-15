@@ -29,21 +29,6 @@ namespace SkiResort
         {
             InitializeComponent();
             con = new MySqlConnection(cs);
-            con.Open();
-            MySqlCommand cmd = new MySqlCommand();
-            cmd.Connection = con;
-            cmd.CommandText = "SELECT * from `user`";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-
-            while (rdr.Read())
-            {
-               
-                    Console.WriteLine(rdr[0] + " -- " + rdr[1]);
-                
-            }
-            rdr.Close();
-            Console.WriteLine($"MySQL version : {con.ServerVersion}");
-            con.Close();
         }
 
         private void Window_Closed(object sender, EventArgs e)

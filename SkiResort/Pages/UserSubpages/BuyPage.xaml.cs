@@ -24,10 +24,14 @@ namespace SkiResort.Pages.UserSubpages
     {
         DataTable dt;
         MySqlConnection connection;
+
+        //Main constructor
         public BuyPage(MySqlConnection _connection)
         {
             connection = _connection;       
             InitializeComponent();
+
+            //Fill the combobox with pass types
             MySqlDataAdapter sda = new MySqlDataAdapter("SELECT * from passtype INNER JOIN pricelist ON passtype.passTypeID=pricelist.PassType_passTypeID where endDate IS NULL ORDER BY price", connection);
             dt = new DataTable();
             sda.Fill(dt);
@@ -35,8 +39,10 @@ namespace SkiResort.Pages.UserSubpages
             
         }
 
+        //Function to facilitate buying a pass
         private void BuyButton_Click(object sender, RoutedEventArgs e)
         {
+            //Insert a new pass
             connection.Open();
             MySqlCommand cmd = new MySqlCommand();
             cmd.Connection = connection;
@@ -46,7 +52,7 @@ namespace SkiResort.Pages.UserSubpages
             cmd.Parameters.Add(new MySqlParameter("price", dt.Rows[(int)PassTypeComboBox.SelectedIndex]["priceListID"].ToString()));
             cmd.ExecuteNonQuery();
 
-
+            //Get the ID
             cmd = new MySqlCommand();
             cmd.Connection = connection;
             cmd.CommandText = "SELECT skiPassID from skipass where User_userID = @user AND PassType_passTypeID = @type AND PassType_PriceList_priceListID = @price AND startDate IS NULL";
@@ -58,7 +64,7 @@ namespace SkiResort.Pages.UserSubpages
             int skipassid = (int)rdr[0];
             rdr.Close();
 
-
+            //Insert a new payment
             cmd = new MySqlCommand();
             cmd.Connection = connection;
             cmd.CommandText = "INSERT INTO `payment` (date, paymentMethod, SkiPass_skiPassID) values (@date, @method, @pass)";
@@ -67,7 +73,7 @@ namespace SkiResort.Pages.UserSubpages
             cmd.Parameters.Add(new MySqlParameter("pass", skipassid));
             cmd.ExecuteNonQuery();
             
-
+            //Fill the message with a name
             cmd = new MySqlCommand();
             cmd.Connection = connection;
             cmd.CommandText = "SELECT firstName, lastName from `user` where userID = @user ";
@@ -81,9 +87,11 @@ namespace SkiResort.Pages.UserSubpages
 
             connection.Close();
 
+            //Display the message
             MessageLabel.Content = "Successfully bought a " + PassTypeComboBox.Text + " pass for " + first + " " + last;
         }
 
+        //Update the price if the combobox selection has changed
         private void PassTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             PriceLabel.Content = dt.Rows[(int)PassTypeComboBox.SelectedIndex]["price"];

@@ -23,13 +23,17 @@ namespace SkiResort.Pages.UserSubpages
     public partial class UserReportPage : Page
     {
         MySqlConnection connection;
+        //Data table for the data grid
         DataTable dt;
+
+        //Main constructor
         public UserReportPage(MySqlConnection _connection)
         {
             connection = _connection;
             InitializeComponent();
         }
 
+        //Check if the user pressed enter
         private void UserIDTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -43,6 +47,7 @@ namespace SkiResort.Pages.UserSubpages
             updateCombo();
         }
 
+        //Function that fills the datagrid with data from the selected skipass
         private void SkiPassComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if(SkiPassComboBox.SelectedIndex < 0)
@@ -62,6 +67,7 @@ namespace SkiResort.Pages.UserSubpages
             EndsLabel.Content = dt.Rows[SkiPassComboBox.SelectedIndex]["expiryDate"];
         }
 
+        //Update the skipass combobox based on the given user ID
         private void updateCombo()
         {
             BeginsLabel.Content = "";

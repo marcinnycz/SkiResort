@@ -25,8 +25,12 @@ namespace SkiResort.Pages.AdminSubpages
     public partial class PriceListPage : Page
     {
         MySqlConnection connection;
+        //Data table for the datagrid
         DataTable dt;
+        //Data table to store a copy of the database table for comparison
         DataTable dt_db;
+
+        //Main constructor
         public PriceListPage(MySqlConnection _connection)
         {
             connection = _connection;
@@ -34,6 +38,7 @@ namespace SkiResort.Pages.AdminSubpages
             UpdateGridFromDB();
         }
 
+        //Function to refresh the data grid from the database
         private void UpdateGridFromDB()
         {
             MySqlDataAdapter sda = new MySqlDataAdapter("SELECT * from passtype INNER JOIN pricelist ON passtype.passTypeID=pricelist.PassType_passTypeID where endDate IS NULL", connection);
@@ -44,6 +49,7 @@ namespace SkiResort.Pages.AdminSubpages
             PriceListDataGrid.ItemsSource = dt.AsDataView();
         }
 
+        //Function saves the data to the database based on the changes in the datagrid
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             connection.Open();
@@ -51,10 +57,13 @@ namespace SkiResort.Pages.AdminSubpages
             bool found = false;
             int foundID = -1;
             
+            //Check for every row in the database
             for (int j = 0; j < dt_db.Rows.Count; j++)
             {
+                //Check for every row in the datagrid
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
+                    //Check if the row exists
                     if (dt.Rows[i]["PassType_passTypeID"].ToString() == dt_db.Rows[j]["PassType_passTypeID"].ToString())
                     {
                         found = true;
@@ -64,9 +73,11 @@ namespace SkiResort.Pages.AdminSubpages
                 }
                 if (found)
                 {
+                    //The row exists
+                    //If the price has changed
                     if(dt.Rows[foundID]["price"].ToString() != dt_db.Rows[j]["price"].ToString())
                     {
-                        //Update existing row
+                        //Update the database entry
                         MySqlCommand cmd = new MySqlCommand();
                         cmd.Connection = connection;
                         cmd.CommandText = "UPDATE `pricelist` SET endDate = @now WHERE PassType_passTypeID = @id AND endDate IS NULL";
@@ -86,8 +97,8 @@ namespace SkiResort.Pages.AdminSubpages
                 }
                 else
                 {
-                    //DELETED
-
+                    //The row was deleted
+                    //Update the database entry
                     MySqlCommand cmd = new MySqlCommand();
                     cmd.Connection = connection;
                     cmd.CommandText = "UPDATE `pricelist` SET endDate = @now WHERE PassType_passTypeID = @id AND endDate IS NULL";
@@ -104,9 +115,9 @@ namespace SkiResort.Pages.AdminSubpages
                 {
                     //Added new row
                     //Add to passtype
-
                     int passid;
 
+                    //Get the ID
                     MySqlCommand cmd = new MySqlCommand();
                     cmd.Connection = connection;
                     cmd.CommandText = "SELECT passTypeID from passtype where name = @name";
@@ -114,6 +125,7 @@ namespace SkiResort.Pages.AdminSubpages
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     if(!rdr.Read())
                     {
+                        //Entry doesn't exist - insert
                         rdr.Close();
                         cmd = new MySqlCommand();
                         cmd.Connection = connection;
@@ -136,7 +148,7 @@ namespace SkiResort.Pages.AdminSubpages
                     {
                         //Get passtypeID
                         passid = (int)rdr[0];
-                        rdr.Close();
+                        rdr.Close();  
                     }
 
                     //Add to pricelist
@@ -155,6 +167,7 @@ namespace SkiResort.Pages.AdminSubpages
             UpdateGridFromDB();
         }
 
+        //Function adds a row to the datagrid. Not yet saved to the database
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
             DataRow workRow = dt.NewRow();
@@ -188,6 +201,7 @@ namespace SkiResort.Pages.AdminSubpages
            
         }
 
+        //Removes the selected row from the datagrid
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             DataRow selectedItem = (DataRow)((DataRowView)PriceListDataGrid.SelectedItem).Row;
