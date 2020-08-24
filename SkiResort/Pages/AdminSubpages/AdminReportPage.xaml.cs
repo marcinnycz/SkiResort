@@ -74,34 +74,34 @@ namespace SkiResort.Pages.AdminSubpages
             }
             if (OpeningFromDatePicker.SelectedDate != null)
             {
-                append += "openingDate >= @from AND ";
-                cmd.Parameters.Add(new MySqlParameter("@from", OpeningFromDatePicker.SelectedDate.Value.ToString("yyyy-MM-dd")));
+                append += "openingDate >= @ofrom AND ";
+                cmd.Parameters.Add(new MySqlParameter("@ofrom", OpeningFromDatePicker.SelectedDate.Value.ToString("yyyy-MM-dd")));
                 added = true;
             }
             if (OpeningToDatePicker.SelectedDate != null)
             {
-                append += "openingDate <= @to AND ";
-                cmd.Parameters.Add(new MySqlParameter("@to", OpeningToDatePicker.SelectedDate.Value.ToString("yyyy-MM-dd") + " 23:59:59"));
+                append += "openingDate <= @oto AND ";
+                cmd.Parameters.Add(new MySqlParameter("@oto", OpeningToDatePicker.SelectedDate.Value.ToString("yyyy-MM-dd") + " 23:59:59"));
                 added = true;
             }
             if (ClosingFromDatePicker.SelectedDate != null)
             {
-                append += "closingDate >= @from AND ";
-                cmd.Parameters.Add(new MySqlParameter("@from", ClosingFromDatePicker.SelectedDate.Value.ToString("yyyy-MM-dd")));
+                append += "closingDate >= @cfrom AND ";
+                cmd.Parameters.Add(new MySqlParameter("@cfrom", ClosingFromDatePicker.SelectedDate.Value.ToString("yyyy-MM-dd")));
                 added = true;
             }
             if (ClosingToDatePicker.SelectedDate != null)
             {
-                append += "closingDate <= @to AND ";
-                cmd.Parameters.Add(new MySqlParameter("@to", ClosingToDatePicker.SelectedDate.Value.ToString("yyyy-MM-dd") + " 23:59:59"));
+                append += "closingDate <= @cto AND ";
+                cmd.Parameters.Add(new MySqlParameter("@cto", ClosingToDatePicker.SelectedDate.Value.ToString("yyyy-MM-dd") + " 23:59:59"));
                 added = true;
             }
             if (TimesFromTextBox.Text != "")
             {
                 if (int.TryParse(TimesFromTextBox.Text, out int value))
                 {
-                    append += "timesUsed >= @from AND ";
-                    cmd.Parameters.Add(new MySqlParameter("@from", TimesFromTextBox.Text));
+                    append += "timesUsed >= @tfrom AND ";
+                    cmd.Parameters.Add(new MySqlParameter("@tfrom", TimesFromTextBox.Text));
                     added = true;
                 }
                 
@@ -110,8 +110,8 @@ namespace SkiResort.Pages.AdminSubpages
             {
                 if (int.TryParse(TimesFromTextBox.Text, out int value))
                 {
-                    append += "timesUsed <= @to AND ";
-                    cmd.Parameters.Add(new MySqlParameter("@to", TimesToTextBox.Text));
+                    append += "timesUsed <= @tto AND ";
+                    cmd.Parameters.Add(new MySqlParameter("@tto", TimesToTextBox.Text));
                     added = true;
                 }               
             }
