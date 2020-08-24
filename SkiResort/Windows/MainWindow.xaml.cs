@@ -23,7 +23,7 @@ namespace SkiResort
     public partial class MainWindow : Window
     {
         //Connection string. Enter the database credentials here.
-        string cs = @"server=localhost;userid=root;password=marcinnycz;database=skiliftd";
+        string cs = @"server=localhost;userid=root;password=marcinnycz;database=skiliftdb";
         MySqlConnection con;
         
         public MainWindow()
@@ -39,7 +39,7 @@ namespace SkiResort
                 MessageBox.Show("Error connecting to the database.");
                 this.Close();
             }
-            
+            con.Close();
         }
 
         private void Window_Closed(object sender, EventArgs e)

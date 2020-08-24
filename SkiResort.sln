@@ -18,7 +18,7 @@ Global
 		{E0354F24-C098-459A-9FE6-52A532BFAC90}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0354F24-C098-459A-9FE6-52A532BFAC90}.Release|Any CPU.Build.0 = Release|Any CPU
 		{79044C7C-AC6B-49AC-8A0F-DBB639B25549}.Debug|Any CPU.ActiveCfg = Debug
-		{79044C7C-AC6B-49AC-8A0F-DBB639B25549}.Release|Any CPU.ActiveCfg = Release
+		{79044C7C-AC6B-49AC-8A0F-DBB639B25549}.Release|Any CPU.ActiveCfg = Debug
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
